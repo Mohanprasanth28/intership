@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pha5e Inspired Hero Section with Loader</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+  <!-- GSAP Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- ScrollTrigger Plugin -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    /* Base Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0F0F0F;
+      color: #FFFFFF;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    /* Loader Styles */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0F0F0F;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .loader-logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.05);
+      }
+    }
+    /* Navigation Bar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      background: rgba(15,15,15,0.9);
+      backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 5%;
+      text-align: center;
+      position: relative;
+      margin-top: 80px; /* Avoid nav overlap */
+      overflow: hidden;
+    }
+    /* New Parallax Background Element */
+    .hero-bg {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 120%;
+      background: url('https://via.placeholder.com/1920x1080') center/cover no-repeat;
+      z-index: -2;
+      will-change: transform;
+    }
+    .hero-heading {
+      font-size: 4.5rem;
+      font-weight: 700;
+      max-width: 900px;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .hero-subheading {
+      font-size: 1.25rem;
+      max-width: 600px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .cta-button {
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: none;
+    }
+    .cta-primary {
+      background: #FFFFFF;
+      color: #0F0F0F;
+    }
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+    }
+    .cta-secondary {
+      background: transparent;
+      color: #FFFFFF;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+    .cta-secondary:hover {
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-3px);
+    }
+    /* Additional Sections */
+    section {
+      padding: 4rem 5%;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-heading {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .section-text {
+      font-size: 1.125rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: rgba(255,255,255,0.8);
+    }
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .project-card {
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+    .project-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .project-card h3 {
+      font-size: 1.5rem;
+      margin: 1rem;
+    }
+    .project-card p {
+      font-size: 1rem;
+      margin: 0 1rem 1rem;
+      color: rgba(255,255,255,0.7);
+    }
+    /* Contact Section */
+    .contact-info {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    .contact-info p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    /* Footer */
+    footer {
+      background: #0F0F0F;
+      padding: 2rem 5%;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .hero-heading {
+        font-size: 3rem;
+      }
+      .hero-subheading {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-logo">Pha5e</div>
+  </div>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-logo">Pha5e</div>
+    <div class="nav-links">
+      <a href="#projects" class="nav-link">Work</a>
+      <a href="#about" class="nav-link">Studio</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+  </nav>
+  <!-- Hero Section -->
+  <section class="hero">
+    <!-- New Background for Mouse Movement Effect -->
+    <div class="hero-bg"></div>
+    <h1 class="hero-heading">Reimagining Digital Experiences</h1>
+    <p class="hero-subheading">
+      We fuse neuroscience and creative technology to craft digital emotions that resonate.
+    </p>
+    <div class="cta-buttons">
+      <button class="cta-button cta-primary">View Projects</button>
+      <button class="cta-button cta-secondary">About Us</button>
+    </div>
+  </section>
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="container">
+      <h2 class="section-heading">Who We Are</h2>
+      <p class="section-text">
+        At Pha5e, we stand at the intersection of science and art, blending neuroscience insights with creative technology to deliver immersive digital experiences.
+      </p>
+    </div>
+  </section>
+  <!-- Projects Section -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <h2 class="section-heading">Our Work</h2>
+      <div class="projects-grid">
+        <div class="project-card">
+          <img src="D:\New folder (2)\project-management\bigger-science_thumbnail-2.png" alt="Project 1" />
+          <h3>Project Title 1</h3>
+          <p>Brief description of project 1.</p>
+        </div>
+        <div class="project-card">
+          <img src="D:\New folder (2)\project-management\Capture daÌeIÌcran 2024-01-04 aIÌ 16.41.06-2.png" alt="Project 2" />
+          <h3>Project Title 2</h3>
+          <p>Brief description of project 2.</p>
+        </div>
+        <div class="project-card">
+          <img src="D:\New folder (2)\project-management\map-interactive.png" alt="Project 3" />
+          <h3>Project Title 3</h3>
+          <p>Brief description of project 3.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <h2 class="section-heading">Get in Touch</h2>
+      <p class="section-text">
+        Let's craft digital experiences together. Reach out for collaborations or inquiries.
+      </p>
+      <div class="contact-info">
+        <p><strong>Mohan</strong> Tamil Nadu</p>
+        
+      </div>
+    </div>
+  </section>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Pha5e. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>
+    // Fade out loader and reveal hero section
+    window.addEventListener("load", () => {
+      gsap.to("#loader", {
+        opacity: 0,
+        duration: 2.5,
+        ease: "power2.out",
+        onComplete: () => {
+          document.getElementById("loader").style.display = "none";
+        }
+      });
+      gsap.to(".hero-heading", { opacity: 1, y: 0, duration: 1, ease: "power4.out", delay: 0.3 });
+      gsap.to(".hero-subheading", { opacity: 1, y: 0, duration: 1, ease: "power4.out", delay: 0.6 });
+      gsap.to(".cta-buttons", { opacity: 1, y: 0, duration: 1, ease: "power4.out", delay: 0.9 });
+    });
+    // GSAP Scroll-triggered animations for additional sections
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.section-heading').forEach(heading => {
+      gsap.from(heading, {
+        scrollTrigger: {
+          trigger: heading,
+          start: "top 80%"
+        },
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        ease: "power2.out"
+      });
+    });
+    gsap.utils.toArray('.section-text').forEach(text => {
+      gsap.from(text, {
+        scrollTrigger: {
+          trigger: text,
+          start: "top 80%"
+        },
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        delay: 0.2,
+        ease: "power2.out"
+      });
+    });
+    
+    /* New Mouse Movement Parallax Effect for Hero Background */
+    const heroSection = document.querySelector('.hero');
+    const heroBg = document.querySelector('.hero-bg');
+    
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      const xPos = e.clientX - rect.left - rect.width / 2;
+      const yPos = e.clientY - rect.top - rect.height / 2;
+      // Adjust the factor to control the movement intensity
+      gsap.to(heroBg, { duration: 0.5, x: xPos * 0.05, y: yPos * 0.05, ease: "power2.out" });
+    });
+  </script>
+</body>
+</html>
